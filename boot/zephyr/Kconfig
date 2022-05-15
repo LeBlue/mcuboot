@@ -258,6 +258,13 @@ config BOOT_IMAGE_EXECUTABLE_RAM_SIZE
 	default $(dt_chosen_reg_size_int,$(DT_CHOSEN_Z_SRAM),0)
 endif
 
+config BOOT_BOOT_MAX_ALIGN
+	int "Maximum flash alignment"
+	default 8
+	help
+	  Maximum boot alignment. Should be set to a multiple of and greater
+	  or equal number than the minimum flash write size.
+
 config BOOT_DIRECT_XIP_REVERT
 	bool "Enable the revert mechanism in direct-xip mode"
 	depends on BOOT_DIRECT_XIP
