@@ -45,7 +45,11 @@
 #include "swap_status.h"
 #endif
 
-MCUBOOT_LOG_MODULE_DECLARE(mcuboot);
+#ifdef CONFIG_MCUBOOT
+BOOT_LOG_MODULE_DECLARE(mcuboot);
+#else
+BOOT_LOG_MODULE_DECLARE(mcuboot_util);
+#endif
 
 /* Currently only used by imgmgr */
 int boot_current_slot;
