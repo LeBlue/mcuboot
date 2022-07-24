@@ -156,7 +156,7 @@ struct status_part_record{
 
 /* size Limit for primary slot trailer buffer */
 // #define MAX_TRAILER_BUF_SIZE        CY_FLASH_ALIGN /* TODO */
-#define MAX_TRAILER_BUF_SIZE        512
+#define MAX_TRAILER_BUF_SIZE        (512 * 8) /* TODO: why is this increased ?, original was flash aling (512) */
 
 int32_t swap_status_init_offset(uint32_t area_id);
 int swap_status_update(uint32_t target_area_id, uint32_t offs, const void *data, uint32_t len);
