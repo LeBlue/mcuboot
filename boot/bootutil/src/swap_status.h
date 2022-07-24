@@ -86,14 +86,14 @@ struct image_status_trailer {
 #define BOOT_SWAP_STATUS_CNT_SZ         4UL
 #define BOOT_SWAP_STATUS_CRC_SZ         4UL
 
-#define BOOT_SWAP_STATUS_ROW_SZ         CY_FLASH_ALIGN
+#define BOOT_SWAP_STATUS_ROW_SZ_MIN     16UL
+#define BOOT_SWAP_STATUS_ROW_SZ         MAX(BOOT_SWAP_STATUS_ROW_SZ_MIN, BOOT_MAX_ALIGN)
 
 /* agreed to name it "a record" */
 #define BOOT_SWAP_STATUS_PAYLD_SZ       (BOOT_SWAP_STATUS_ROW_SZ -\
                                             BOOT_SWAP_STATUS_MGCREC_SZ - \
                                             BOOT_SWAP_STATUS_CNT_SZ - \
                                             BOOT_SWAP_STATUS_CRC_SZ)
-#define BOOT_SWAP_STATUS_ROW_SZ_MIN     16UL
 
 /* INFO: defining record structure for better understanding */
 struct status_part_record{
@@ -124,8 +124,7 @@ struct status_part_record{
     16 bytes -  uint8_t magic[BOOT_MAGIC_SZ];
     = 55 bytes
  */
-#define BOOT_SWAP_STATUS_TRAILER_SIZE 64UL
-// TODO: check if min write size is 64 or larger
+#define BOOT_SWAP_STATUS_TRAILER_SIZE  ALIGN_UP(64UL, BOOT_MAX_ALIGN)
 // TODO: small-magic, coutner and crc aren't coutned here
 
 /* number of rows trailer data should fit into */
@@ -156,7 +155,8 @@ struct status_part_record{
                                     BOOT_SWAP_STATUS_SZ_PRIM)
 
 /* size Limit for primary slot trailer buffer */
-#define MAX_TRAILER_BUF_SIZE        CY_FLASH_ALIGN
+// #define MAX_TRAILER_BUF_SIZE        CY_FLASH_ALIGN /* TODO */
+#define MAX_TRAILER_BUF_SIZE        512
 
 int32_t swap_status_init_offset(uint32_t area_id);
 int swap_status_update(uint32_t target_area_id, uint32_t offs, const void *data, uint32_t len);

@@ -29,9 +29,16 @@
 #include "crc32c.h"
 #include <string.h>
 #include <stdlib.h>
+#include "bootutil/bootutil_log.h"
 #include "swap_status.h"
 
 #ifdef MCUBOOT_SWAP_USING_STATUS
+
+#ifdef CONFIG_MCUBOOT
+BOOT_LOG_MODULE_DECLARE(mcuboot);
+#else
+BOOT_LOG_MODULE_DECLARE(mcuboot_util);
+#endif
 
 #define IMAGE_0_STATUS_OFFS        0
 #define IMAGE_0_STATUS_SIZE        (BOOT_SWAP_STATUS_SIZE)
@@ -80,30 +87,24 @@ int32_t swap_status_init_offset(uint32_t area_id)
 {
     int32_t offset = -1;
     /* calculate an offset caused by area type: primary_x/secondary_x */
-    switch (area_id) {
-    case FLASH_AREA_IMAGE_0:
+    if (area_id == FLASH_AREA_IMAGE_PRIMARY(0)) {
         offset = (int)IMAGE_0_STATUS_OFFS;
-        break;
-    case FLASH_AREA_IMAGE_1:
+    } else if (area_id == FLASH_AREA_IMAGE_SECONDARY(0)) {
         offset = (int)IMAGE_1_STATUS_OFFS;
-        break;
 #ifdef MCUBOOT_SWAP_USING_SCRATCH
-    case FLASH_AREA_IMAGE_SCRATCH:
+    } else if (area_id == FLASH_AREA_IMAGE_SCRATCH) {
         offset = (int)SCRATCH_STATUS_OFFS;
-        break;
 #endif
 #if (MCUBOOT_IMAGE_NUMBER == 2)
-    case FLASH_AREA_IMAGE_2:
-        offset = (int)IMAGE_2_STATUS_OFFS;
-        break;
-    case FLASH_AREA_IMAGE_3:
+    } else if (area_id == FLASH_AREA_IMAGE_PRIMARY(1)) {
         offset = (int)IMAGE_3_STATUS_OFFS;
-        break;
+    } else if (area_id == FLASH_AREA_IMAGE_SECONDARY(1)) {
+        offset = (int)IMAGE_4_STATUS_OFFS;
 #endif
-    default:
+    } else {
         offset = -1;
-        break;
     }
+
     return offset;
 }
 
@@ -249,9 +250,9 @@ static int swap_status_write_record(uint32_t rec_offset, uint32_t copy_num, uint
     return rc;
 }
 
-static int boot_magic_decode(uint8_t *magic)
+static int boot_magic_decode(const uint8_t *magic)
 {
-    if (memcmp(magic, boot_img_magic, BOOT_MAGIC_SZ) == 0) {
+    if (memcmp(magic, BOOT_IMG_MAGIC, BOOT_MAGIC_SZ) == 0) {
         return BOOT_MAGIC_GOOD;
     }
     return BOOT_MAGIC_BAD;
@@ -412,9 +413,9 @@ int swap_status_to_image_trailer(const struct flash_area *fap)
     uint32_t cur_trailer_pos;
     uint32_t primary_trailer_sz;
     uint32_t primary_trailer_buf_sz;
-    uint32_t align = CY_FLASH_ALIGN;
+    uint32_t align;
     int rc = 0;
-    uint8_t primary_trailer_buf[MAX_TRAILER_BUF_SIZE]; 
+    uint8_t primary_trailer_buf[MAX_TRAILER_BUF_SIZE];
 
     /* get status partition trailer size and copy it to buffer */
     const uint32_t status_trailer_buf_sz = BOOT_SWAP_STATUS_SWAPSZ_SZ + BOOT_SWAP_STATUS_SWAPINF_SZ +
@@ -438,7 +439,7 @@ int swap_status_to_image_trailer(const struct flash_area *fap)
 #if !defined(__BOOTSIM__)
     align = flash_area_align(fap);
 #else
-    align = CY_FLASH_ALIGN;
+    align = BOOT_MAX_ALIGN;
 #endif
 
     if ((align > MAX_TRAILER_BUF_SIZE) || (align == 0u)) {

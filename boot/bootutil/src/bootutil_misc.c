@@ -138,7 +138,7 @@ boot_trailer_sz(uint32_t min_write_sz)
     return boot_status_sz(min_write_sz) + boot_trailer_info_sz();
 }
 
-#if MCUBOOT_SWAP_USING_SCRATCH
+#if MCUBOOT_SWAP_USING_SCRATCH && !defined(MCUBOOT_SWAP_USING_STATUS)
 /*
  * Similar to `boot_trailer_sz` but this function returns the space used to
  * store status in the scratch partition. The scratch partition only stores
@@ -190,7 +190,6 @@ boot_status_off(const struct flash_area *fap)
     assert(off_from_end <= flash_area_get_size(fap));
     return flash_area_get_size(fap) - off_from_end;
 }
-#endif
 
 static int
 boot_magic_decode(const uint8_t *magic)
@@ -200,6 +199,7 @@ boot_magic_decode(const uint8_t *magic)
     }
     return BOOT_MAGIC_BAD;
 }
+#endif
 
 static inline uint32_t
 boot_magic_off(const struct flash_area *fap)
