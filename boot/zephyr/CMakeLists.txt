@@ -115,8 +115,9 @@ zephyr_library_sources(
   ${BOOT_DIR}/bootutil/src/image_rsa.c
   ${BOOT_DIR}/bootutil/src/image_ec256.c
   ${BOOT_DIR}/bootutil/src/image_ed25519.c
-  ${BOOT_DIR}/bootutil/src/bootutil_misc.c
+  # ${BOOT_DIR}/bootutil/src/bootutil_misc.c
   ${BOOT_DIR}/bootutil/src/fault_injection_hardening.c
+  #${BOOT_DIR}/bootutil/src/swap_status_misc.c
   )
 
 # library which might be common source code for MCUBoot and an application
@@ -140,6 +141,10 @@ zephyr_library_sources(
   ${BOOT_DIR}/bootutil/src/swap_scratch.c
   ${BOOT_DIR}/bootutil/src/swap_move.c
   ${BOOT_DIR}/bootutil/src/caps.c
+  ${BOOT_DIR}/bootutil/src/swap_status.c
+  #${BOOT_DIR}/bootutil/src/crc32c.c
+  #${BOOT_DIR}/bootutil/src/swap_status_misc.c
+  #${BOOT_DIR}/bootutil/src/swap_status_part.c
   )
 endif()
 

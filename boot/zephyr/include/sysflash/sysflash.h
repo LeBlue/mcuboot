@@ -39,8 +39,14 @@
 #error "Image slot and flash area mapping is not defined"
 #endif
 
-#if !defined(CONFIG_BOOT_SWAP_USING_MOVE)
+#if !defined(MCUBOOT_SWAP_USING_MOVE)
 #define FLASH_AREA_IMAGE_SCRATCH    FLASH_AREA_ID(image_scratch)
+#endif
+
+#if defined(MCUBOOT_SWAP_USING_STATUS)
+#define FLASH_AREA_IMAGE_SWAP_STATUS     FLASH_AREA_ID(image_status)
+#define FLASH_AREA_IMAGE_SWAP_STATUS_SIZE   FLASH_AREA_SIZE(image_status)
+
 #endif
 
 #else /* CONFIG_SINGLE_APPLICATION_SLOT */

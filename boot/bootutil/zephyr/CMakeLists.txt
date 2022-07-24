@@ -15,7 +15,11 @@ target_include_directories(MCUBOOT_BOOTUTIL INTERFACE
 zephyr_library_named(mcuboot_util)
 zephyr_library_sources(
   ../src/bootutil_public.c
-    )
+  ../src/bootutil_misc.c
+  ../src/swap_status_misc.c
+  ../src/swap_status_part.c
+  ../src/crc32c.c
+  )
 
 if(CONFIG_BOOT_IMAGE_ACCESS_HOOKS)
   if(NOT CONFIG_BOOT_IMAGE_ACCESS_HOOKS_FILE STREQUAL "")

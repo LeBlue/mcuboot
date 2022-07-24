@@ -39,7 +39,8 @@
     !defined(FLASH_ALIGN) ||                  \
     !(FLASH_AREA_LABEL_EXISTS(image_0)) || \
     !(FLASH_AREA_LABEL_EXISTS(image_1) || CONFIG_SINGLE_APPLICATION_SLOT) || \
-    (defined(CONFIG_BOOT_SWAP_USING_SCRATCH) && !FLASH_AREA_LABEL_EXISTS(image_scratch))
+    (defined(CONFIG_BOOT_SWAP_USING_SCRATCH) && !FLASH_AREA_LABEL_EXISTS(image_scratch)) || \
+    (defined(CONFIG_BOOT_SWAP_USING_STATUS) && !FLASH_AREA_LABEL_EXISTS(image_status))
 #error "Target support is incomplete; cannot build mcuboot."
 #endif
 

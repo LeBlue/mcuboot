@@ -258,6 +258,16 @@ config BOOT_IMAGE_EXECUTABLE_RAM_SIZE
 	default $(dt_chosen_reg_size_int,$(DT_CHOSEN_Z_SRAM),0)
 endif
 
+if BOOT_SWAP_USING_MOVE || BOOT_SWAP_USING_SCRATCH
+config BOOT_SWAP_USING_STATUS
+	bool "Use status partition for saving swap status"
+	help
+	  If y, the swap upgrade status is not saved as trailer to the
+	  image partition but in dedicated swap status partition. Needed
+	  for flashes with big write block size.
+
+endif # BOOT_SWAP_USING_MOVE || BOOT_SWAP_USING_SCRATCH
+
 config BOOT_BOOT_MAX_ALIGN
 	int "Maximum flash alignment"
 	default 8
