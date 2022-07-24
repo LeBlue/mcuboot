@@ -79,7 +79,7 @@
 
 #if defined(CONFIG_BOOT_SWAP_USING_STATUS) || defined(CONFIG_MCUBOOT_TRAILER_SWAP_STATUS_TYPE)
 #define MCUBOOT_SWAP_USING_STATUS 1
-/* TODO */
+/* TODO: boot max swap status sectors: check original impl. */
 #define BOOT_MAX_SWAP_STATUS_SECTORS   (64)
 #endif
 
